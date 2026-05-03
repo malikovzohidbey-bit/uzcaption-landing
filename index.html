@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<title>UzCaption — AI Subtitles for Uzbek</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Geist:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#faf9f7;--fg:#1a1a1a;--muted:#888;--dim:#bbb;--border:#eee;--card:#fff;--violet:#7c5bf0;--rose:#e8457a;--mint:#2dd4a8;--sky:#38bdf8;--warm:#f5f0ea}
+html{scroll-behavior:smooth}
+body{font-family:'Geist',sans-serif;background:var(--bg);color:var(--fg);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+::selection{background:var(--violet);color:#fff}
+a{color:inherit;text-decoration:none}
+
+/* Cursor trail */
+.trail{position:fixed;width:8px;height:8px;border-radius:50%;background:var(--violet);pointer-events:none;z-index:9999;opacity:0;transition:opacity .3s;mix-blend-mode:difference}
+
+
+/* Nav */
+nav{position:fixed;top:0;width:100%;z-index:100;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);background:rgba(250,249,247,.85);border-bottom:1px solid rgba(0,0,0,.05)}
+.nav-in{max-width:1200px;margin:0 auto;padding:14px 32px;display:flex;align-items:center;justify-content:space-between}
+.n-logo{font-weight:900;font-size:18px;letter-spacing:-.03em}
+.n-logo b{color:var(--violet)}
+.n-right{display:flex;align-items:center;gap:24px}
+.n-link{font-size:13px;font-weight:600;color:var(--muted);transition:.3s}
+.n-link:hover{color:var(--fg)}
+.n-cta{padding:10px 24px;background:var(--fg);color:var(--bg);border-radius:100px;font-size:13px;font-weight:700;transition:all .3s}
+.n-cta:hover{background:var(--violet);transform:scale(1.04)}
+
+/* Hero */
+.hero{min-height:90vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 32px 60px;position:relative}
+.hero h1{font-family:'Instrument Serif',serif;font-size:clamp(48px,9vw,120px);font-weight:400;line-height:.95;letter-spacing:-.04em;margin-bottom:24px;max-width:900px}
+.hero h1 em{font-style:italic;color:var(--violet)}
+.hero-sub{font-size:clamp(15px,1.8vw,19px);color:var(--muted);max-width:500px;line-height:1.7;margin-bottom:40px;font-weight:500}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.btn-hero{padding:16px 36px;background:var(--fg);color:#fff;border-radius:100px;font-size:16px;font-weight:700;display:inline-flex;align-items:center;gap:10px;transition:all .4s;border:none;cursor:pointer}
+.btn-hero:hover{background:var(--violet);transform:translateY(-2px);box-shadow:0 16px 48px rgba(124,91,240,.25)}
+.btn-ghost{padding:16px 36px;background:transparent;border:1.5px solid var(--border);border-radius:100px;font-size:16px;font-weight:600;color:var(--fg);transition:all .3s}
+.btn-ghost:hover{border-color:var(--violet);color:var(--violet)}
+
+/* Section */
+.sec{padding:100px 32px;max-width:1200px;margin:0 auto}
+.sec-label{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--violet);margin-bottom:12px}
+.sec h2{font-family:'Instrument Serif',serif;font-size:clamp(28px,5vw,52px);line-height:1.1;letter-spacing:-.03em;margin-bottom:16px}
+.sec h2 em{font-style:italic;color:var(--violet)}
+.sec-desc{font-size:17px;color:var(--muted);max-width:480px;line-height:1.7;font-weight:500}
+
+/* Bento */
+.bento{display:grid;grid-template-columns:repeat(12,1fr);gap:12px;margin-top:48px}
+.bx{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px;transition:all .4s;position:relative;overflow:hidden}
+.bx:hover{border-color:rgba(124,91,240,.2);transform:translateY(-3px);box-shadow:0 16px 48px rgba(0,0,0,.05)}
+.c12{grid-column:span 12}.c8{grid-column:span 8}.c6{grid-column:span 6}.c4{grid-column:span 4}.c3{grid-column:span 3}
+
+.bx-icon{font-size:28px;margin-bottom:14px}
+.bx h3{font-size:17px;font-weight:800;margin-bottom:5px;letter-spacing:-.01em}
+.bx p{color:var(--muted);font-size:13px;line-height:1.65;font-weight:500}
+
+/* Feature with gradient border on hover */
+.bx.feat::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--violet),var(--rose),var(--sky));transform:scaleX(0);transition:transform .4s;transform-origin:left}
+.bx.feat:hover::after{transform:scaleX(1)}
+
+/* Big stat */
+.big-num{font-family:'Instrument Serif',serif;font-size:48px;font-weight:400;letter-spacing:-.03em;margin-bottom:2px}
+.big-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+
+/* Compare */
+.cmp{margin-top:12px}
+.cmp-r{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid #f5f5f5;font-size:13px;font-weight:600}
+.cmp-r:last-child{border:none}
+.cmp-r .k{color:var(--muted)}.cmp-r .v{font-weight:800}
+.cmp-r .yes{color:var(--mint)}.cmp-r .no{color:#ddd}
+
+/* Audience */
+.aud{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;background:#faf9f7;border:1px solid var(--border);margin-bottom:8px;transition:all .3s}
+.aud:hover{border-color:var(--violet);transform:translateX(4px)}
+.aud-e{font-size:20px;flex-shrink:0}
+.aud-t{font-size:13px;font-weight:700}
+.aud-d{font-size:11px;color:var(--muted);font-weight:500}
+
+
+/* Platform tags */
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
+.tag{padding:6px 14px;border-radius:100px;font-size:11px;font-weight:700;border:1px solid var(--border);color:var(--muted)}
+.tag.live{background:rgba(124,91,240,.06);border-color:rgba(124,91,240,.2);color:var(--violet)}
+
+/* CTA section */
+.final-cta{text-align:center;padding:80px 32px 100px;position:relative}
+.final-cta h2{font-family:'Instrument Serif',serif;font-size:clamp(32px,6vw,64px);letter-spacing:-.04em;margin-bottom:16px;line-height:1}
+.final-cta h2 em{font-style:italic;color:var(--violet)}
+.final-cta p{color:var(--muted);font-size:17px;margin-bottom:32px;font-weight:500}
+
+/* Footer */
+footer{text-align:center;padding:32px;border-top:1px solid var(--border);font-size:12px;color:var(--dim);font-weight:500}
+footer a{color:var(--violet);font-weight:700}
+
+/* Animated underline */
+.uline{position:relative;display:inline-block}
+.uline::after{content:'';position:absolute;bottom:-2px;left:0;width:100%;height:2px;background:var(--violet);transform:scaleX(0);transition:transform .4s;transform-origin:right}
+.uline:hover::after{transform:scaleX(1);transform-origin:left}
+
+/* Cyrillic serif fallback */
+html[lang="ru"] .hero h1,html[lang="ru"] .sec h2,html[lang="ru"] .final-cta h2,html[lang="ru"] .big-num,html[lang="ru"] .cd-v{font-family:'Playfair Display',serif}
+
+/* Lang switch */
+.lang-switch{display:flex;gap:2px;background:#f0f0f0;border-radius:100px;padding:3px}
+.lang-btn{border:none;background:transparent;padding:6px 12px;border-radius:100px;font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .3s}
+.lang-btn.active{background:var(--fg);color:#fff}
+.lang-btn:hover:not(.active){color:var(--fg)}
+
+/* Responsive */
+@media(max-width:768px){
+.bento{grid-template-columns:1fr}
+.c12,.c8,.c6,.c4,.c3{grid-column:span 1}
+.bx.c12[style*="grid-template-columns"]{grid-template-columns:1fr !important}
+.bx.c12[style*="grid-template-columns"] > div{border-right:none !important;border-bottom:1px solid var(--border)}
+.bx.c12[style*="grid-template-columns"] > div:last-child{border-bottom:none}
+.hero{padding:90px 20px 40px !important}
+.sec{padding:60px 20px}
+.n-link{display:none}
+.cd-unit{min-width:52px;padding:10px 12px}
+.cd-v{font-size:24px}
+}
+</style>
+</head>
+<body>
+
+<!-- Cursor trail -->
+<div class="trail" id="trail"></div>
+
+<!-- Marquee -->
+<div style="height:54px"></div>
+<nav>
+<div class="nav-in">
+<a href="#" class="n-logo"><b>Uz</b>Caption</a>
+<div class="n-right">
+<a href="#how" class="n-link uline" data-i18n="nav_how">How it works</a>
+<a href="#compare" class="n-link uline" data-i18n="nav_compare">Compare</a>
+<a href="#pricing" class="n-link uline" data-i18n="nav_pricing">Pricing</a>
+<div class="lang-switch" id="langSwitch">
+<button class="lang-btn active" data-lang="en">EN</button>
+<button class="lang-btn" data-lang="uz">UZ</button>
+<button class="lang-btn" data-lang="ru">RU</button>
+</div>
+<a href="/ijodxona" class="n-cta" data-i18n="nav_cta">Try free →</a>
+</div>
+</div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" style="margin-top:54px;padding-top:100px">
+<h1 data-i18n-html="hero_title">Stop typing<br>subtitles.<br><em>Let AI listen.</em></h1>
+<p class="hero-sub" data-i18n="hero_sub">Send any video to our Telegram bot. Get perfectly timed Uzbek subtitles back in 30 seconds. No app. No signup. Just send.</p>
+<div class="hero-actions">
+<a href="/ijodxona" class="btn-hero">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M12 8v8m-4-4h8"/></svg>
+<span data-i18n="hero_btn">Brauzerda sinab koʻring</span>
+</a>
+<a href="https://t.me/uzcaptions_bot" target="_blank" class="btn-ghost">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="opacity:.6"><path d="M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0zm5.94 8.2l-2.02 9.52c-.15.68-.56.84-1.13.52l-3.12-2.3-1.5 1.45c-.17.17-.31.31-.64.31l.22-3.16 5.74-5.19c.25-.22-.05-.34-.39-.13l-7.09 4.47-3.06-.95c-.66-.21-.68-.66.14-.98l11.96-4.61c.55-.2 1.03.13.85.98z"/></svg>
+<span data-i18n="hero_ghost">Telegram botda sinab koʻring</span>
+</a>
+</div>
+</section>
+
+<!-- HOW IT WORKS -->
+<div class="sec" id="how" style="padding-bottom:60px">
+<h2 data-i18n-html="how_title" style="margin-bottom:32px">Send it.<br><em>Get it.</em></h2>
+
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:1200px">
+<div style="background:var(--card);border:1px solid var(--border);border-radius:24px;padding:40px 32px;transition:all .3s">
+<div style="font-size:48px;margin-bottom:16px">📤</div>
+<h3 style="font-size:24px;font-weight:800;margin-bottom:10px" data-i18n="step1_title">Yuboring</h3>
+<p style="font-size:16px;color:var(--muted);line-height:1.7" data-i18n="step1_desc">Videoni botga tashlang.</p>
+</div>
+<div style="background:var(--card);border:1px solid var(--border);border-radius:24px;padding:40px 32px;transition:all .3s">
+<div style="font-size:48px;margin-bottom:16px">🧠</div>
+<h3 style="font-size:24px;font-weight:800;margin-bottom:10px" data-i18n="step2_title">AI yozadi</h3>
+<p style="font-size:16px;color:var(--muted);line-height:1.7" data-i18n="step2_desc">Oʻ, gʻ, tutuq belgisi — toʻgʻri. Tinish belgilari — joyida. Imlo xatosiz.</p>
+</div>
+<div style="background:var(--card);border:1px solid var(--border);border-radius:24px;padding:40px 32px;transition:all .3s">
+<div style="font-size:48px;margin-bottom:16px">✅</div>
+<h3 style="font-size:24px;font-weight:800;margin-bottom:10px" data-i18n="step3_title">Yuklab oling</h3>
+<p style="font-size:16px;color:var(--muted);line-height:1.7" data-i18n="step3_desc">CapCut, Premiere, DaVinci — istalgan dasturga qoʻying.</p>
+</div>
+</div>
+</div>
+
+<!-- WHY — Bento -->
+<div class="sec" id="compare" style="padding-bottom:60px">
+<h2 data-i18n-html="compare_title" style="margin-bottom:24px">Every other tool<br><em>fails at Uzbek.</em></h2>
+
+<div class="bento" style="gap:12px">
+<!-- 98% comparison -->
+<div class="bx c12 acc-block" style="padding:48px;background:linear-gradient(180deg,rgba(124,91,240,.04),transparent);overflow:hidden">
+<div style="display:flex;align-items:center;gap:48px;flex-wrap:wrap;justify-content:center">
+<!-- Big number -->
+<div style="text-align:center;flex-shrink:0">
+<div style="font-family:'Instrument Serif',serif;font-size:clamp(64px,10vw,96px);font-weight:400;color:var(--violet);line-height:1;letter-spacing:-.04em">98%</div>
+<div style="font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:4px" data-i18n="compare_accuracy">Oʻzbekcha aniqlik</div>
+</div>
+<!-- Horizontal bars -->
+<div style="flex:1;min-width:280px;max-width:480px;display:flex;flex-direction:column;gap:16px">
+<!-- UzCaption -->
+<div>
+<div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:14px;font-weight:800;color:var(--violet)">UzCaption</span><span style="font-size:14px;font-weight:800;color:var(--violet)">98%</span></div>
+<div style="height:14px;background:#f0f0f0;border-radius:7px;overflow:hidden"><div class="acc-bar-uz" style="height:100%;width:0%;background:linear-gradient(90deg,var(--violet),var(--rose));border-radius:7px;transition:width 1.5s cubic-bezier(.4,0,.2,1)"></div></div>
+</div>
+<!-- Others -->
+<div>
+<div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:14px;font-weight:600;color:var(--dim)" data-i18n="compare_others_label">Boshqa dasturlar</span><span style="font-size:14px;font-weight:600;color:var(--dim)">40-55%</span></div>
+<div style="height:14px;background:#f0f0f0;border-radius:7px;overflow:hidden"><div class="acc-bar-other" style="height:100%;width:0%;background:#d4d4d4;border-radius:7px;transition:width 1.5s cubic-bezier(.4,0,.2,1) .3s"></div></div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Who uses + Translation — merged -->
+<div class="bx c12" style="padding:0;overflow:hidden;display:grid;grid-template-columns:1fr 1fr">
+<!-- Left: Who -->
+<div style="padding:36px 40px;border-right:1px solid var(--border)">
+<h3 style="font-size:20px;font-weight:800;margin-bottom:20px" data-i18n="aud_title">Kim uchun?</h3>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+<div style="padding:20px;border-radius:16px;background:linear-gradient(135deg,rgba(124,91,240,.06),rgba(232,69,122,.03))">
+<div style="font-size:28px;margin-bottom:8px">🎬</div>
+<div style="font-size:15px;font-weight:700" data-i18n="aud1_t">Video blogerlar</div>
+<div style="font-size:12px;color:var(--muted);margin-top:4px" data-i18n="aud1_d">Reels, TikTok, Shorts</div>
+</div>
+<div style="padding:20px;border-radius:16px;background:rgba(56,189,248,.04)">
+<div style="font-size:28px;margin-bottom:8px">📊</div>
+<div style="font-size:15px;font-weight:700" data-i18n="aud2_t">SMM mutaxassislar</div>
+<div style="font-size:12px;color:var(--muted);margin-top:4px" data-i18n="aud2_d">Mijoz videolariga subtitr</div>
+</div>
+<div style="padding:20px;border-radius:16px;background:rgba(45,212,168,.04)">
+<div style="font-size:28px;margin-bottom:8px">🎓</div>
+<div style="font-size:15px;font-weight:700" data-i18n="aud3_t">Kurs mualliflari</div>
+<div style="font-size:12px;color:var(--muted);margin-top:4px" data-i18n="aud3_d">Darslik videolariga subtitr</div>
+</div>
+<div style="padding:20px;border-radius:16px;background:rgba(245,158,11,.04)">
+<div style="font-size:28px;margin-bottom:8px">🏢</div>
+<div style="font-size:15px;font-weight:700" data-i18n="aud4_t">Agentliklar</div>
+<div style="font-size:12px;color:var(--muted);margin-top:4px" data-i18n="aud4_d">Koʻp videoga — bir yoʻla</div>
+</div>
+</div>
+</div>
+<!-- Right: Translation -->
+<div style="padding:36px 40px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;background:linear-gradient(180deg,rgba(124,91,240,.04),rgba(232,69,122,.02),transparent)">
+<h3 style="font-size:20px;font-weight:800;margin-bottom:6px" data-i18n="trans_title">Tarjima ham bor</h3>
+<p style="font-size:13px;color:var(--muted);margin-bottom:28px" data-i18n="trans_desc">Bir tugma bilan.</p>
+<!-- Flag carousel -->
+<div style="display:flex;align-items:center;gap:16px;margin-bottom:28px">
+<span style="font-size:32px;opacity:.3">🇪🇸</span>
+<span style="font-size:32px;opacity:.5">🇷🇺</span>
+<div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--violet),var(--rose));display:flex;align-items:center;justify-content:center;box-shadow:0 8px 32px rgba(124,91,240,.3)">
+<span style="font-size:36px" id="transFlag">🇺🇿</span>
+</div>
+<span style="font-size:32px;opacity:.5">🇬🇧</span>
+<span style="font-size:32px;opacity:.3">🇺🇿</span>
+</div>
+<!-- Language pills -->
+<div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center">
+<span style="padding:8px 16px;border-radius:100px;font-size:12px;font-weight:700;background:rgba(124,91,240,.08);color:var(--violet);border:1px solid rgba(124,91,240,.15)">Oʻzbekcha</span>
+<span style="padding:8px 16px;border-radius:100px;font-size:12px;font-weight:700;background:rgba(232,69,122,.06);color:var(--rose);border:1px solid rgba(232,69,122,.1)">Ruscha</span>
+<span style="padding:8px 16px;border-radius:100px;font-size:12px;font-weight:700;background:rgba(56,189,248,.06);color:var(--sky);border:1px solid rgba(56,189,248,.1)">English</span>
+<span style="padding:8px 16px;border-radius:100px;font-size:12px;font-weight:700;background:rgba(245,158,11,.06);color:#d97706;border:1px solid rgba(245,158,11,.1)">Espanol</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- PRICING -->
+<div class="sec" id="pricing" style="padding-bottom:60px">
+<h2 data-i18n-html="price_title" style="margin-bottom:24px">Completely free.<br><em>For now.</em></h2>
+
+<div class="bento">
+<!-- Main price card — full width, gradient bg -->
+<div class="bx c12" style="padding:0;overflow:hidden;background:linear-gradient(135deg,rgba(124,91,240,.06),rgba(232,69,122,.03),rgba(56,189,248,.03))">
+<div style="display:grid;grid-template-columns:1fr 1fr;min-height:320px">
+<!-- Left: Big $0 + title -->
+<div style="padding:48px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid rgba(124,91,240,.08)">
+<div style="font-family:'Instrument Serif',serif;font-size:clamp(80px,12vw,120px);color:var(--violet);line-height:.9;letter-spacing:-.04em;margin-bottom:8px">$0</div>
+<h3 style="font-size:clamp(20px,3vw,28px);font-weight:800;margin-bottom:16px;line-height:1.2" data-i18n="price_h3">Hammasi bepul.<br>Karta kerak emas.</h3>
+<p style="font-size:15px;color:var(--muted);line-height:1.6;max-width:320px">Hech narsa toʻlamaysiz. Hech qayerga karta qoʻymaysiz. Shunchaki ishlating.</p>
+</div>
+<!-- Right: Features + Stats -->
+<div style="padding:48px;display:flex;flex-direction:column;justify-content:center;gap:28px">
+<!-- Features -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+<div style="display:flex;align-items:center;gap:12px;padding:14px 18px;background:rgba(255,255,255,.6);border-radius:14px;border:1px solid rgba(124,91,240,.08)">
+<span style="font-size:22px">🎬</span>
+<div><div style="font-size:15px;font-weight:700" data-i18n="feat1">Kuniga 10 ta video</div></div>
+</div>
+<div style="display:flex;align-items:center;gap:12px;padding:14px 18px;background:rgba(255,255,255,.6);border-radius:14px;border:1px solid rgba(124,91,240,.08)">
+<span style="font-size:22px">🌐</span>
+<div><div style="font-size:15px;font-weight:700" data-i18n="feat3">Oʻzbek, rus, ingliz tili</div></div>
+</div>
+<div style="display:flex;align-items:center;gap:12px;padding:14px 18px;background:rgba(255,255,255,.6);border-radius:14px;border:1px solid rgba(124,91,240,.08)">
+<span style="font-size:22px">🔄</span>
+<div><div style="font-size:15px;font-weight:700" data-i18n="feat5">Tarjima funksiyasi</div></div>
+</div>
+<div style="display:flex;align-items:center;gap:12px;padding:14px 18px;background:rgba(255,255,255,.6);border-radius:14px;border:1px solid rgba(124,91,240,.08)">
+<span style="font-size:22px">🎯</span>
+<div><div style="font-size:15px;font-weight:700" data-i18n="feat6">Barcha editorlar</div></div>
+</div>
+</div>
+<!-- Stats -->
+<div style="display:flex;gap:16px">
+<div style="flex:1;text-align:center;padding:20px;background:rgba(255,255,255,.7);border-radius:16px;border:1px solid rgba(232,69,122,.08)">
+<div style="font-family:'Instrument Serif',serif;font-size:42px;color:var(--rose);line-height:1">30s</div>
+<div style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:4px" data-i18n="stat_speed">Oʻrtacha tezlik</div>
+</div>
+<div style="flex:1;text-align:center;padding:20px;background:rgba(255,255,255,.7);border-radius:16px;border:1px solid rgba(56,189,248,.08)">
+<div style="font-family:'Instrument Serif',serif;font-size:42px;color:var(--sky);line-height:1">3</div>
+<div style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:4px" data-i18n="stat_free">Kuniga bepul</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- FINAL CTA -->
+<div class="final-cta">
+<h2 data-i18n-html="cta_title">Your next video<br>deserves <em>subtitles.</em></h2>
+<p data-i18n="cta_sub">Send a video right now. It takes 30 seconds. Literally.</p>
+<a href="https://t.me/uzcaptions_bot" target="_blank" class="btn-hero" style="font-size:18px;padding:18px 40px">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0zm5.94 8.2l-2.02 9.52c-.15.68-.56.84-1.13.52l-3.12-2.3-1.5 1.45c-.17.17-.31.31-.64.31l.22-3.16 5.74-5.19c.25-.22-.05-.34-.39-.13l-7.09 4.47-3.06-.95c-.66-.21-.68-.66.14-.98l11.96-4.61c.55-.2 1.03.13.85.98z"/></svg>
+<span data-i18n="cta_btn">Open @uzcaptions_bot</span>
+</a>
+</div>
+
+<footer>
+<p data-i18n-html="footer">UzCaption AI © 2026 · Built in Tashkent · <a href="https://t.me/Malikov_Zohid">@Malikov_Zohid</a></p>
+</footer>
+
+<script>
+
+// i18n
+const i18n={
+en:{
+nav_how:"How it works",nav_compare:"Compare",nav_pricing:"Pricing",nav_cta:"Try free →",
+hero_title:'Still typing<br>subtitles by hand?<br><em>AI does it at 98% accuracy.</em>',
+hero_sub:"Used another tool, half the words were wrong, rewrote it yourself — sound familiar?",
+hero_btn:"Try in browser",hero_ghost:"Try in Telegram bot",
+how_label:"How it works",how_title:'Send it.<br><em>Get it.</em>',
+step1_title:"Send",step1_desc:"Drop your video into the bot.",
+step2_title:"AI writes",step2_desc:"Oʻ, gʻ, apostrophes — correct. Punctuation — perfect. Zero typos.",
+step3_title:"Download",step3_desc:"Drop into CapCut, Premiere, DaVinci — any editor.",
+compare_title:'Other tools<br><em>fail at Uzbek.</em>',
+compare_accuracy:"Uzbek accuracy",compare_others_label:"Other tools",
+aud_title:"Built for creators",
+aud1_t:"Video bloggers",aud1_d:"Reels, TikTok, Shorts subtitles",
+aud2_t:"Social media managers",aud2_d:"Fast subtitles for client content",
+aud3_t:"Course creators",aud3_d:"Subtitles for educational videos",
+aud4_t:"Agencies",aud4_d:"Bulk subtitle processing",
+trans_title:"Translate in one tap",trans_desc:"Uzbek → Russian, English, Spanish — one button.",
+price_title:'Completely free.<br><em>For now.</em>',
+price_h3:"Everything included. No credit card.",
+feat1:"3 videos per day",feat3:"Uzbek, Russian, English",
+feat5:"Translation",feat6:"All editors supported",
+stat_speed:"Avg speed",stat_free:"Free per day",
+cta_title:'Your next video<br>deserves <em>subtitles.</em>',cta_sub:"Send a video right now. It takes 30 seconds. Literally.",
+cta_btn:"Open @uzcaptions_bot",
+footer:'UzCaption AI © 2026 · Built in Tashkent · <a href="https://t.me/Malikov_Zohid">@Malikov_Zohid</a>'
+},
+uz:{
+pain_text:"Subtitrni haliyam qoʻlda yozib oʻtiribsizmi? Yoki 20$ toʻlab baribir oʻzingiz toʻgʻrilayapsizmi?",
+nav_how:"Qanday ishlaydi",nav_compare:"Solishtiruv",nav_pricing:"Narx",nav_cta:"Sinab koʻring →",
+hero_title:'Haliyam qoʻlda<br>yozib oʻtiribsizmi?<br><em>AI 98% aniqlikda yozadi.</em>',
+hero_sub:"Boshqa toolda subtitr qildingiz, yarmi xato, oʻzingiz qayta yozdingiz — tanishmi bu holat?",
+hero_btn:"Brauzerda sinab koʻring",hero_ghost:"Telegram botda sinab koʻring",
+how_label:"Qanday ishlaydi",how_title:'Yuboring —<br><em>oling.</em>',
+step1_title:"Yuboring",step1_desc:"Videoni botga tashlang.",
+step2_title:"AI yozadi",step2_desc:"Oʻ, gʻ, tutuq belgisi — toʻgʻri. Tinish belgilari — joyida. Imlo xatosiz.",
+step3_title:"Yuklab oling",step3_desc:"CapCut, Premiere, DaVinci — istalgan dasturga qoʻying.",
+compare_title:'Boshqa dasturlar<br><em>oʻzbekchani bilmaydi.</em>',
+compare_accuracy:"Oʻzbekcha aniqlik",compare_others_label:"Boshqa dasturlar",
+aud_title:"Kim uchun?",
+aud1_t:"Video blogerlar",aud1_d:"Reels, TikTok, Shorts uchun subtitr",
+aud2_t:"SMM mutaxassislar",aud2_d:"Mijoz videolariga subtitr",
+aud3_t:"Kurs muallif­lari",aud3_d:"Darslik videolariga subtitr",
+aud4_t:"Agentliklar",aud4_d:"Koʻp videoga — bir yoʻla",
+trans_title:"Tarjima ham bor",trans_desc:"Oʻzbekchadan ruscha, inglizcha, ispanchaga — bir tugma bilan.",
+price_title:'Hozircha<br><em>bepul.</em>',
+price_h3:"Hammasi bepul. Karta kerak emas.",
+feat1:"Kuniga 3 ta video",feat3:"Oʻzbek, rus, ingliz tili",
+feat5:"Tarjima funksiyasi",feat6:"Barcha editorlar bilan ishlaydi",
+stat_speed:"Oʻrtacha tezlik",stat_free:"Kuniga bepul",
+cta_title:'Videongizga<br><em>subtitr</em> kerak.',cta_sub:"Hoziroq yuboring. 30 soniya — tayyor.",
+cta_btn:"@uzcaptions_bot",
+footer:'UzCaption AI © 2026 · Toshkentda yaratilgan · <a href="https://t.me/Malikov_Zohid">@Malikov_Zohid</a>'
+},
+ru:{
+nav_how:"Как это работает",nav_compare:"Сравнение",nav_pricing:"Цена",nav_cta:"Попробовать →",
+hero_title:'Всё ещё пишете<br>субтитры вручную?<br><em>AI сделает с точностью 98%.</em>',
+hero_sub:"Сделали субтитры в другом приложении, половина с ошибками, переписали сами — знакомо?",
+hero_btn:"Попробовать в браузере",hero_ghost:"Попробовать в Telegram боте",
+how_label:"Как это работает",how_title:'Отправьте —<br><em>получите.</em>',
+step1_title:"Отправьте",step1_desc:"Скиньте видео в бот.",
+step2_title:"AI пишет",step2_desc:"Oʻ, gʻ, апострофы — правильно. Пунктуация — на месте. Без ошибок.",
+step3_title:"Скачайте",step3_desc:"Вставьте в CapCut, Premiere, DaVinci — любой редактор.",
+compare_title:'Другие инструменты<br><em>не понимают узбекский.</em>',
+compare_accuracy:"Точность узбекского",compare_others_label:"Другие инструменты",
+aud_title:"Для кого это?",
+aud1_t:"Видеоблогеры",aud1_d:"Субтитры для Reels, TikTok, Shorts",
+aud2_t:"SMM-специалисты",aud2_d:"Быстрые субтитры для клиентского контента",
+aud3_t:"Авторы курсов",aud3_d:"Субтитры для учебных видео",
+aud4_t:"Агентства",aud4_d:"Пакетная обработка большого объёма видео",
+trans_title:"Встроенный перевод",trans_desc:"Узбекский → русский, английский, испанский — одной кнопкой.",
+price_title:'Пока что —<br><em>бесплатно.</em>',
+price_h3:"Всё включено. Карта не нужна.",
+feat1:"3 видео в день",feat3:"Узбекский, русский, английский",
+feat5:"Перевод",feat6:"Совместим со всеми редакторами",
+stat_speed:"Скорость",stat_free:"Бесплатно в день",
+cta_title:'Вашему видео<br>нужны <em>субтитры.</em>',cta_sub:"Отправьте видео прямо сейчас. 30 секунд — готово.",
+cta_btn:"Открыть @uzcaptions_bot",
+footer:'UzCaption AI © 2026 · Сделано в Ташкенте · <a href="https://t.me/Malikov_Zohid">@Malikov_Zohid</a>'
+}
+}
+let curLang=localStorage.getItem('uz_lang')||'uz'
+function setLang(lang){
+curLang=lang;localStorage.setItem('uz_lang',lang)
+document.documentElement.lang=lang
+document.querySelectorAll('[data-i18n]').forEach(el=>{
+const key=el.getAttribute('data-i18n')
+if(i18n[lang][key])el.textContent=i18n[lang][key]
+})
+document.querySelectorAll('[data-i18n-html]').forEach(el=>{
+const key=el.getAttribute('data-i18n-html')
+if(i18n[lang][key])el.innerHTML=i18n[lang][key]
+})
+document.querySelectorAll('.lang-btn').forEach(b=>{
+b.classList.toggle('active',b.dataset.lang===lang)
+})
+document.title=lang==='uz'?'UzCaption — O\'zbek tili uchun AI subtitrlar':lang==='ru'?'UzCaption — AI субтитры для узбекского':'UzCaption — AI Subtitles for Uzbek'
+}
+document.getElementById('langSwitch').addEventListener('click',e=>{
+if(e.target.classList.contains('lang-btn'))setLang(e.target.dataset.lang)
+})
+setLang(curLang)
+
+// Accuracy bars animation on scroll
+const accBlock=document.querySelector('.acc-block')
+if(accBlock){
+const obs=new IntersectionObserver(entries=>{
+if(entries[0].isIntersecting){
+document.querySelector('.acc-bar-uz').style.width='98%'
+document.querySelector('.acc-bar-other').style.width='48%'
+obs.disconnect()
+}
+},{threshold:0.3})
+obs.observe(accBlock)
+}
+
+// Flag rotation
+const flags=['🇺🇿','🇷🇺','🇬🇧','🇪🇸']
+let fi=0
+const fe=document.getElementById('transFlag')
+if(fe)setInterval(()=>{fi=(fi+1)%flags.length;fe.style.transition='opacity .2s';fe.style.opacity='0';setTimeout(()=>{fe.textContent=flags[fi];fe.style.opacity='1'},200)},2000)
+
+// Cursor trail
+const trail=document.getElementById('trail')
+let mx=0,my=0,tx=0,ty=0
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;trail.style.opacity='1'})
+document.addEventListener('mouseleave',()=>{trail.style.opacity='0'})
+function lerp(){tx+=(mx-tx)*.15;ty+=(my-ty)*.15;trail.style.transform=`translate(${tx-4}px,${ty-4}px)`;requestAnimationFrame(lerp)}
+lerp()
+</script>
+
+<script async defer src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+<noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif" alt="" referrerpolicy="no-referrer-when-downgrade" /></noscript>
+</body>
+</html>
