@@ -116,11 +116,44 @@ html[lang="ru"] .hero h1,html[lang="ru"] .sec h2,html[lang="ru"] .final-cta h2,h
 .bx.c12[style*="grid-template-columns"]{grid-template-columns:1fr !important}
 .bx.c12[style*="grid-template-columns"] > div{border-right:none !important;border-bottom:1px solid var(--border)}
 .bx.c12[style*="grid-template-columns"] > div:last-child{border-bottom:none}
-.hero{padding:90px 20px 40px !important}
-.sec{padding:60px 20px}
+.hero{padding:80px 16px 32px !important;margin-top:40px !important}
+.hero h1{font-size:clamp(36px,8vw,64px) !important}
+.hero-sub{font-size:15px !important;padding:0 8px}
+.hero-actions{flex-direction:column;align-items:center;gap:10px}
+.btn-hero,.btn-ghost{width:100%;max-width:320px;justify-content:center;font-size:15px;padding:14px 28px}
+.sec{padding:48px 16px}
+.sec h2{font-size:clamp(24px,6vw,36px) !important}
 .n-link{display:none}
+.n-cta{padding:8px 16px;font-size:12px}
+.nav-in{padding:12px 16px}
 .cd-unit{min-width:52px;padding:10px 12px}
 .cd-v{font-size:24px}
+/* Pricing card mobile */
+.bx.c12 > div[style*="grid-template-columns"]{grid-template-columns:1fr !important;min-height:auto !important}
+.bx.c12 > div[style*="grid-template-columns"] > div{border-right:none !important;border-bottom:1px solid rgba(124,91,240,.08);padding:32px 24px !important}
+.bx.c12 > div[style*="grid-template-columns"] > div:last-child{border-bottom:none}
+/* Audience grid mobile */
+div[style*="grid-template-columns: 1fr 1fr"]{grid-template-columns:1fr !important}
+/* Flag carousel smaller */
+.final-cta{padding:48px 16px 64px}
+.final-cta h2{font-size:clamp(28px,7vw,48px) !important}
+.final-cta .btn-hero{width:100%;max-width:320px;justify-content:center}
+/* Hide cursor trail on mobile */
+.trail{display:none}
+/* All 2-col grids become 1-col */
+.mob-grid-2{grid-template-columns:1fr !important}
+.mob-grid-2 > div{border-right:none !important}
+/* Language pills wrap */
+div[style*="display:flex;gap:6px;flex-wrap:wrap"]{justify-content:center}
+}
+@media(max-width:480px){
+.hero h1{font-size:32px !important}
+.sec h2{font-size:24px !important}
+.bx{padding:20px !important}
+.nav-in{padding:10px 12px}
+.n-logo{font-size:16px}
+.lang-switch{gap:1px}
+.lang-btn{padding:5px 8px;font-size:10px}
 }
 </style>
 </head>
@@ -194,11 +227,11 @@ html[lang="ru"] .hero h1,html[lang="ru"] .sec h2,html[lang="ru"] .final-cta h2,h
 </div>
 
 <!-- Who uses + Translation — merged -->
-<div class="bx c12" style="padding:0;overflow:hidden;display:grid;grid-template-columns:1fr 1fr">
+<div class="bx c12 mob-grid-2" style="padding:0;overflow:hidden;display:grid;grid-template-columns:1fr 1fr">
 <!-- Left: Who -->
 <div style="padding:36px 40px;border-right:1px solid var(--border)">
 <h3 style="font-size:20px;font-weight:800;margin-bottom:20px" data-i18n="aud_title">Kim uchun?</h3>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+<div class="mob-grid-2" style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
 <div style="padding:20px;border-radius:16px;background:linear-gradient(135deg,rgba(124,91,240,.06),rgba(232,69,122,.03))">
 <div style="font-size:28px;margin-bottom:8px">🎬</div>
 <div style="font-size:15px;font-weight:700" data-i18n="aud1_t">Video blogerlar</div>
@@ -254,7 +287,7 @@ html[lang="ru"] .hero h1,html[lang="ru"] .sec h2,html[lang="ru"] .final-cta h2,h
 <div class="bento">
 <!-- Main price card — full width, gradient bg -->
 <div class="bx c12" style="padding:0;overflow:hidden;background:linear-gradient(135deg,rgba(124,91,240,.06),rgba(232,69,122,.03),rgba(56,189,248,.03))">
-<div style="display:grid;grid-template-columns:1fr 1fr;min-height:320px">
+<div class="mob-grid-2" style="display:grid;grid-template-columns:1fr 1fr;min-height:320px">
 <!-- Left: Big $0 + title -->
 <div style="padding:48px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid rgba(124,91,240,.08)">
 <div style="font-family:'Instrument Serif',serif;font-size:clamp(80px,12vw,120px);color:var(--violet);line-height:.9;letter-spacing:-.04em;margin-bottom:8px">$0</div>
@@ -264,7 +297,7 @@ html[lang="ru"] .hero h1,html[lang="ru"] .sec h2,html[lang="ru"] .final-cta h2,h
 <!-- Right: Features + Stats -->
 <div style="padding:48px;display:flex;flex-direction:column;justify-content:center;gap:28px">
 <!-- Features -->
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+<div class="mob-grid-2" style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
 <div style="display:flex;align-items:center;gap:12px;padding:14px 18px;background:rgba(255,255,255,.6);border-radius:14px;border:1px solid rgba(124,91,240,.08)">
 <span style="font-size:22px">🎬</span>
 <div><div style="font-size:15px;font-weight:700" data-i18n="feat1">Kuniga 10 ta video</div></div>
